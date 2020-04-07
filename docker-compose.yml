@@ -1,0 +1,21 @@
+version: "3"
+
+networks:
+  proxy:
+    external: true
+  static:
+    external: false
+
+services:
+  nginx:
+    build:
+      context: .
+    container_name: "${PROJECT_NAME}_nginx"
+    networks:
+      - static
+      - proxy
+    volumes:
+      - ./data:/usr/share/nginx/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    labels:
+      - "traefik.http.routers.${PROJECT_NAME}_nginx.rule=Host(`${PROJECT_BASE_URL}`)"
